@@ -1,22 +1,28 @@
 <?php
-/**
- * Flamework class file
- *
- * @author Donie Leigh <donie.leigh@gmail.com>
- */
 namespace org\x3f\flamework;
 
+/**
+ * Flamework entry class, provides some common functions
+ *
+ * @author Donie Leigh <donie.leigh@gmail.com>
+ * @link http://0x3f.org
+ * @copyright Copyright &copy; 2013-2014 Donie Leigh
+ * @license BSD (3-terms)
+ * @since 1.0
+ */
 class Flame {
     /**
-     * Namespaces and their corresponding paths, used for class auto-loading
-     **/
+     * @var array Namespaces and their corresponding paths, used for class auto-loading
+     * @since 1.0
+     */
     public static $_namespaces = array();
 
     /**
      * Create the application instance
+     * @param string $config Configuration file path
      * @return WebApplication
-     * @author Donie Leigh <donie.leigh@gmail.com>
-     **/
+     * @since 1.0
+     */
     public static function createApplication($config)
     {
         return new base\WebApplication($config);
@@ -26,8 +32,8 @@ class Flame {
      * Autoload classes
      * @param string $className Class name with namespace
      * @return boolean True for success, false for failure
-     * @author Donie Leigh <donie.leigh@gmail.com>
-     **/
+     * @since 1.0
+     */
     public static function autoload($className)
     {
         if (!isset(self::$_namespaces[__NAMESPACE__]))
@@ -47,8 +53,8 @@ class Flame {
      * @param string $ns Namespace
      * @param string $path Path of the namespace
      * @return void
-     * @author Donie Leigh <donie.leigh@gmail.com>
-     **/
+     * @since 1.0
+     */
     public static function registerNamespace($ns, $path)
     {
         self::$_namespaces[$ns] = $path;
@@ -58,8 +64,8 @@ class Flame {
      * Deregister a namespace
      * @param string $ns Namespace
      * @return void
-     * @author Donie Leigh <donie.leigh@gmail.com>
-     **/
+     * @since 1.0
+     */
     public static function deregisterNamespace($ns)
     {
         unset(self::$_namespaces[$ns]);
@@ -69,8 +75,8 @@ class Flame {
      * Register namespaces
      * @param array $namespaces Namespaces and their paths
      * @return void
-     * @author Donie Leigh <donie.leigh@gmail.com>
-     **/
+     * @since 1.0
+     */
     public static function registerNamespaces($namespaces)
     {
         if (is_array($namespaces))

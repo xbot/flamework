@@ -3,16 +3,24 @@ namespace org\x3f\flamework\base;
 use org\x3f\flamework\Flame as Flame;
 
 /**
- * The application abstraction
+ * WebApplication class
+ *
  * @author Donie Leigh <donie.leigh@gmail.com>
+ * @link http://0x3f.org
+ * @copyright Copyright &copy; 2013-2014 Donie Leigh
+ * @license BSD (3-terms)
+ * @since 1.0
  */
-class WebApplication 
-{
+class WebApplication {
     /**
-     * Namespaces and their corresponding paths, used for class auto-loading
-     **/
+     * @var array Namespaces and their corresponding paths, used for class auto-loading
+     * @since 1.0
+     */
     public $namespaces;
 
+    /**
+     * @param string $config
+     */
     public function __construct($config)
     {
         if (is_string($config))
@@ -23,24 +31,23 @@ class WebApplication
     /**
      * Bootstrap method of the application
      * @return void
-     * @author Donie Leigh <donie.leigh@gmail.com>
-     **/
+     * @since 1.0
+     */
     public function run()
     {
-        // echo 'i am running';
+        echo 'i am running';
 
         // TODO: 获取“请求”组件
         // TODO: 获取要执行的Controller和method
         // TODO: 执行controller->method
-
-        echo $this->name;
     }
 
     /**
      * Configures this application
+     * @param array $config
      * @return void
-     * @author Donie Leigh <donie.leigh@gmail.com>
-     **/
+     * @since 1.0
+     */
     public function configure($config)
     {
         if (is_array($config)) {
