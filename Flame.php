@@ -12,10 +12,20 @@ namespace org\x3f\flamework;
  */
 class Flame {
     /**
+     * @var WebApplication Application instance
+     * @since 1.0
+     */
+    public static $_app;
+    /**
      * @var array Namespaces and their corresponding paths, used for class auto-loading
      * @since 1.0
      */
     public static $_namespaces = array();
+    /**
+     * @var ILogger The logger instance
+     * @since 1.0
+     */
+    public static $_logger;
 
     /**
      * Create the application instance
@@ -28,6 +38,27 @@ class Flame {
         return new base\WebApplication($config);
     }
 
+    /**
+     * Hold application instance
+     * @param WebApplication $instance
+     * @return void
+     * @since 1.0
+     */
+    public static function setApplication($instance)
+    {
+        self::$_app = $instance;
+    }
+
+    /**
+     * Get application instance
+     * @return WebApplication
+     * @since 1.0
+     */
+    public static function app()
+    {
+        return self::$_app;
+    }
+    
     /**
      * Autoload classes
      * @param string $className Class name with namespace
@@ -82,6 +113,52 @@ class Flame {
         if (is_array($namespaces))
             self::$_namespaces = array_merge(self::$_namespaces, $namespaces);
     }
+
+    /**
+     * Return the logger instance
+     * @return ILogger
+     * @since 1.0
+     */
+    public static function getLogger()
+    {
+        if (self::$_logger == null)
+            self::$_logger = new logging\FileLogger();
+        return self::$_logger;
+    }
+    
+    /**
+     * Shortcut for logging on normal level
+     * @param string $msg
+     * @return void
+     * @since 1.0
+     */
+    public static function log($msg)
+    {
+        self::getLogger()->log($msg);
+    }
+
+    /**
+     * Shortcut for logging on debug level
+     * @param string $msg
+     * @return void
+     * @since 1.0
+     */
+    public static function debug($msg)
+    {
+        self::getLogger()->debug($msg);
+    }
+
+    /**
+     * Shortcut for logging on error level
+     * @param string $msg
+     * @return void
+     * @since 1.0
+     */
+    public static function error($msg)
+    {
+        self::getLogger()->error($msg);
+    }
+    
 }
 
 spl_autoload_register(__NAMESPACE__.'\\Flame::autoload');
