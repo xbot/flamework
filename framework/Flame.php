@@ -70,7 +70,7 @@ class Flame {
         if (!isset(self::$_namespaces[__NAMESPACE__]))
             self::$_namespaces[__NAMESPACE__] = dirname(__FILE__);
         foreach (self::$_namespaces as $ns=>$path){
-            if (strpos($className, $ns) == 0) {
+            if (strpos($className, $ns) === 0) {
                 $classFile = $path.str_replace('\\', DIRECTORY_SEPARATOR, substr($className, strlen($ns))).'.php';
                 include($classFile);
                 return class_exists($className);

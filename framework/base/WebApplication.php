@@ -1,8 +1,8 @@
 <?php
 namespace org\x3f\flamework\base;
 use org\x3f\flamework\Flame as Flame;
-use org\x3f\flamework\exceptions\FlameException as FlameException;
 use org\x3f\flamework\logging\Logger as Logger;
+use org\x3f\flamework\exceptions\FlameException, org\x3f\flamework\exceptions\HttpException;
 
 /**
  * WebApplication class
@@ -19,6 +19,11 @@ class WebApplication {
      * @since 1.0
      */
     public $namespaces;
+    /**
+     * @var array Filter classes 
+     * @since 1.0
+     */
+    public $filters;
     /**
      * @var boolean Whether to enable error auto-handling, default to true 
      * @since 1.0
@@ -44,6 +49,11 @@ class WebApplication {
      * @since 1.0
      */
     public $debug = false;
+    /**
+     * @var string The default controller name
+     * @since 1.0
+     */
+    public $defaultController = 'default';
     /**
      * @var string The base path in which all private files are placed 
      * @since 1.0
@@ -80,11 +90,8 @@ class WebApplication {
      */
     public function run()
     {
-        echo 'i am running';
-
-        // TODO: 获取“请求”组件
-        // TODO: 获取要执行的Controller和method
-        // TODO: 执行controller->method
+        $chain = new FilterChain($this, 'processRequest', array(HttpRequest::getInstance()), $this->filters);
+        $chain->run();
     }
 
     /**
@@ -154,6 +161,16 @@ class WebApplication {
         return $this->getProtectedPath().DIRECTORY_SEPARATOR.'temp';
     }
 
+    /**
+     * Get controller path
+     * @return string The controller path
+     * @since 1.0
+     */
+    public function getControllerPath()
+    {
+        return $this->getProtectedPath().DIRECTORY_SEPARATOR.'controller';
+    }
+    
     /**
      * Initialize auto-handling for errors and exceptions
      * @return void
@@ -248,10 +265,55 @@ class WebApplication {
         if ($this->debug == true) {
             echo '<h1>'.get_class($exception).'</h1>';
             echo '<p>'.$exception->getMessage().' ('.$exception->getFile().':'.$exception->getLine().')</p>';
-			echo '<pre>'.$exception->getTraceAsString().'</pre>';
+            echo '<pre>'.$exception->getTraceAsString().'</pre>';
         } else {
             echo '<h1>'.get_class($exception).'</h1>';
             echo '<p>'.$exception->getMessage().'</p>';
+        }
+    }
+    
+    /**
+     * Get the default controller name
+     * @return string Controller name
+     * @since 1.0
+     */
+    public function getDefaultController()
+    {
+        return $this->defaultController;
+    }
+    
+    /**
+     * Process request
+     * @param HttpRequest $request
+     * @return void
+     * @since 1.0
+     */
+    public function processRequest(HttpRequest $request)
+    {
+        $controller = $this->createController($request->getController());
+        $controller->process($request);
+    }
+    
+    /**
+     * Create an instance of the controller
+     * @param string $controllerName
+     * @return Controller Controller instance
+     * @since 1.0
+     */
+    public function createController($controllerName)
+    {
+        $className = ucfirst($controllerName).'Controller';
+        $classFile = $this->getControllerPath().DIRECTORY_SEPARATOR."$className.php";
+        if (file_exists($classFile)) {
+            $ns = include_once($classFile);
+            $fullClassName = "$ns\\$className";
+            if (class_exists($fullClassName)) {
+                return new $fullClassName();
+            } else {
+                throw new HttpException(404, "Request to $controllerName is unresolvable.");
+            }
+        } else {
+            throw new HttpException(404, "Request to $controllerName is unresolvable.");
         }
     }
     
