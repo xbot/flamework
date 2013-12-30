@@ -1,6 +1,6 @@
 <?php
 namespace org\x3f\flamework\base;
-use org\x3f\flamework\Flame as Flame;
+use org\x3f\flamework\Flame;
 
 /**
  * HTTP request wrapper

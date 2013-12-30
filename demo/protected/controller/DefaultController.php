@@ -18,9 +18,14 @@ class Defaultcontroller extends Controller
         // code
     }
 
-    public function index($param, $request)
+    public function index()
     {
-        echo __METHOD__.'<br>';
+        // echo __METHOD__.'<br>';
+
+        $this->render('post/list', array(
+            'name' => 'leigh',
+            'age' => 23,
+        ));
     }
     
 }

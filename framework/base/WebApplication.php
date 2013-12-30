@@ -170,6 +170,16 @@ class WebApplication {
     {
         return $this->getProtectedPath().DIRECTORY_SEPARATOR.'controller';
     }
+
+    /**
+     * Get view template path
+     * @return string The view template path
+     * @since 1.0
+     */
+    public function getViewPath()
+    {
+        return $this->getProtectedPath().DIRECTORY_SEPARATOR.'view';
+    }
     
     /**
      * Initialize auto-handling for errors and exceptions

@@ -1,6 +1,7 @@
 <?php
 namespace org\x3f\flamework\base;
-use org\x3f\flamework\exceptions\HttpException;
+use org\x3f\flamework\Flame;
+use org\x3f\flamework\exceptions\FlameException, org\x3f\flamework\exceptions\HttpException;
 
 /**
  * Ancestor class for all controllers
@@ -76,6 +77,25 @@ class Controller
                 $filters[] = $filterClass;
         }
         return $filters;
+    }
+    
+    /**
+     * Render the view template with data
+     * @param string $view View template relative path to base path of the templates
+     *                     For example, 'post/list' point to file /srv/http/mysite/protected/view/post/list.php
+     * @param array $data Associative array in which data is stored as key-value pairs
+     * @return void
+     * @since 1.0
+     */
+    public function render($view, $data)
+    {
+        extract($data, EXTR_PREFIX_SAME, 'tpl_');
+        $viewFile = Flame::app()->getViewPath().DIRECTORY_SEPARATOR.$view.'.php';
+        if (is_readable($viewFile)) {
+            require($viewFile);
+        } else {
+            throw new FlameException("View template $view does not exist or cannot be readable.");
+        }
     }
     
 }
