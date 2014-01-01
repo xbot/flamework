@@ -12,5 +12,8 @@ return array(
         'org\\x3f\\flamedemo\\filter\\GlobalFilterA',
         'org\\x3f\\flamedemo\\filter\\GlobalFilterB',
     ),
+    'db' => array(
+        'connection_string' => 'sqlite:/srv/http/flamework/demo/protected/demo.db',
+    ),
 );
 ?>

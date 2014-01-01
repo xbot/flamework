@@ -55,6 +55,11 @@ class WebApplication {
      */
     public $defaultController = 'default';
     /**
+     * @var array Database connection data 
+     * @since 1.0
+     */
+    public $db;
+    /**
      * @var string The base path in which all private files are placed 
      * @since 1.0
      */
@@ -64,6 +69,11 @@ class WebApplication {
      * @since 1.0
      */
     private $_logLevel = Logger::LEVEL_LOG;
+    /**
+     * @var DBConnection Database connection 
+     * @since 1.0
+     */
+    private $_dbConnection;
 
     /**
      * @param string $config
@@ -325,6 +335,19 @@ class WebApplication {
         } else {
             throw new HttpException(404, "Request to $controllerName is unresolvable.");
         }
+    }
+    
+    /**
+     * Return the DBConnection instance
+     * @return DBConnection
+     * @since 1.0
+     */
+    public function getDBConnection()
+    {
+        if (!($this->_dbConnection instanceof DBConnection)) {
+            $this->_dbConnection = new DBConnection($this->db);
+        }
+        return $this->_dbConnection;
     }
     
 }
