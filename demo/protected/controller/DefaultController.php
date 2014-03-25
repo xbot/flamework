@@ -4,6 +4,7 @@ use org\x3f\flamework\Flame;
 use org\x3f\flamework\base\Controller;
 use org\x3f\flamework\base\HttpRequest;
 use org\x3f\flamedemo\model\Post;
+use org\x3f\flamework\base\DI;
 
 /**
  * Class Defaultcontroller 
@@ -28,8 +29,10 @@ class Defaultcontroller extends Controller
         ));
 
         /*
-         * $conn = Flame::app()->getDBConnection();
-         * $rows = $conn->rows('select * from test');
+         * $di = DI::getInstance();
+         * $di->set('haha', 'ok');
+         * $var = $di->getHaha();
+         * var_dump($var);
          */
 
         /*

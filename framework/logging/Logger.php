@@ -17,6 +17,11 @@ abstract class Logger {
     const LEVEL_ERROR = 3;
 
     /**
+     * @var int Logging level
+     */
+    private $_level = self::LEVEL_LOG;
+
+    /**
      * Basic logging method
      * @param string $msg
      * @param int $level
@@ -25,6 +30,27 @@ abstract class Logger {
      */
     abstract public function log($msg, $level=self::LEVEL_LOG);
 
+    /**
+     * Set logging level
+     * @param const Logging level
+     * @return void
+     * @since 1.0
+     */
+    public function setLevel($level)
+    {
+        $this->_level = $level;
+    }
+
+    /**
+     * Return logging level
+     * @return const Logging level
+     * @since 1.0
+     */
+    public function getLevel()
+    {
+        return $this->_level;
+    }
+    
     /**
      * Log message on debug level
      * @param string $msg

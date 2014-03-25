@@ -64,16 +64,6 @@ class WebApplication {
      * @since 1.0
      */
     private $_protectedPath;
-    /**
-     * @var int Log level 
-     * @since 1.0
-     */
-    private $_logLevel = Logger::LEVEL_LOG;
-    /**
-     * @var DBConnection Database connection 
-     * @since 1.0
-     */
-    private $_dbConnection;
 
     /**
      * @param string $config
@@ -112,30 +102,12 @@ class WebApplication {
      */
     public function configure($config)
     {
-        // set log level if exists
-        if (isset($config['logLevel'])) {
-            if (is_int($config['logLevel']))
-                $this->_logLevel = $config['logLevel'];
-            else if (is_string($config['logLevel']))
-                $this->_logLevel = Logger::getLevelByLabel($config['logLevel']);
-            unset($config['logLevel']);
-        }
         if (is_array($config)) {
             foreach ($config as $k=>$v){
                 $this->$k = $v;
             }
         }
         Flame::registerNamespaces($this->namespaces);
-    }
-
-    /**
-     * Get log level
-     * @return int Log level
-     * @since 1.0
-     */
-    public function getLogLevel()
-    {
-        return $this->_logLevel;
     }
     
     /**
@@ -335,19 +307,6 @@ class WebApplication {
         } else {
             throw new HttpException(404, "Request to $controllerName is unresolvable.");
         }
-    }
-    
-    /**
-     * Return the DBConnection instance
-     * @return DBConnection
-     * @since 1.0
-     */
-    public function getDBConnection()
-    {
-        if (!($this->_dbConnection instanceof DBConnection)) {
-            $this->_dbConnection = new DBConnection($this->db);
-        }
-        return $this->_dbConnection;
     }
     
 }

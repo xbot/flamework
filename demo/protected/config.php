@@ -2,7 +2,6 @@
 return array(
     'name' => 'Demo App',
     'debug' => true,
-    'logLevel' => 'log',
     'exceptionHandler' => function($exception) {
         var_dump($exception);
         return true;

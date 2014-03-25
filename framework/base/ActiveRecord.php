@@ -1,6 +1,7 @@
 <?php
 namespace org\x3f\flamework\base;
 use org\x3f\flamework\Flame;
+use org\x3f\flamework\exceptions\FlameException;
 
 /**
  * Ancestor class for active records
@@ -64,6 +65,29 @@ abstract class ActiveRecord
      * @since 1.0
      */
     abstract public function getPrimaryKey();
+
+    /**
+     * Set the db connection
+     * @param object Db connection instance
+     * @return void
+     * @since 1.0
+     */
+    public function setDbConnection($conn)
+    {
+        $this->_dbConnection = $conn;
+    }
+    
+    /**
+     * Get the db connection
+     * @return object Db connection instance
+     * @since 1.0
+     */
+    public function getDbConnection()
+    {
+        if ($this->_dbConnection == null)
+            throw new FlameException('Failed to get db connection.');
+        return $this->_dbConnection;
+    }
     
     /**
      * Magic method for accessing model attributes
@@ -146,7 +170,7 @@ abstract class ActiveRecord
     public function findByPk($val)
     {
         $sql = "select * from ".$this->getTableName()." where ".$this->getPrimaryKey()."=?";
-        $rows = Flame::app()->getDBConnection()->rows($sql, array($val));
+        $rows = $this->getDbConnection()->rows($sql, array($val));
         if (count($rows) > 0) {
             return $this->createInstance($rows[0]);
         }
@@ -195,7 +219,7 @@ abstract class ActiveRecord
             $cols = implode(', ', array_keys($this->_data));
             $placeHolders = implode(', ', array_fill(0, count($this->_data), '?'));
             $sql = "insert into ".$this->getTableName(). " ($cols) values ($placeHolders)";
-            Flame::app()->getDBConnection()->execute($sql, array_values($this->_data));
+            $this->getDbConnection()->execute($sql, array_values($this->_data));
         }
     }
     
@@ -210,7 +234,7 @@ abstract class ActiveRecord
             $pairs = implode('=?, ', array_keys($this->_dirtyData)).'=?';
             $sql = 'update '.$this->getTableName()." set $pairs where ".$this->getPrimaryKey().'=?';
             $pk = $this->getPrimaryKey();
-            Flame::app()->getDBConnection()->execute($sql, array_merge(array_values($this->_dirtyData), array($this->$pk)));
+            $this->getDbConnection()->execute($sql, array_merge(array_values($this->_dirtyData), array($this->$pk)));
         }
     }
     
@@ -224,7 +248,7 @@ abstract class ActiveRecord
         if (!$this->getIsNew()) {
             $pk = $this->getPrimaryKey();
             $sql = 'delete from '.$this->getTableName()." where $pk=?";
-            Flame::app()->getDBConnection()->execute($sql, array($this->$pk));
+            $this->getDbConnection()->execute($sql, array($this->$pk));
         }
     }
     

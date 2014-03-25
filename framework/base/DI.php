@@ -1,5 +1,6 @@
 <?php
 namespace org\x3f\flamework\base;
+use org\x3f\flamework\exceptions\FlameException;
 
 /**
  * Dependency Injection Class
@@ -46,7 +47,7 @@ class DI
      **/
     public function set($key, $service, $isSingleton=false)
     {
-        $this->_services[$key] = array(
+        $this->_services[strtolower($key)] = array(
             'service' => $service,
             'isSingleton' => $isSingleton,
             'instance' => null
@@ -60,6 +61,7 @@ class DI
      */
     public function get($key)
     {
+        $key = strtolower($key);
         if (isset($this->_services[$key])) {
             $info = &$this->_services[$key];
             if ($info['instance'] !== null)
@@ -74,6 +76,22 @@ class DI
             }
         }
         return null;
+    }
+    
+    /**
+     * Get service with magic method
+     * @param string $method get{ServiceName}
+     * @param array $parameters Parameters, currently useless
+     * @return mixed Service instance
+     * @since 1.0
+     */
+    public function __call($method, $parameters)
+    {
+        if (strpos(strtolower($method), 'get') === 0) {
+            $serviceName = substr($method, 3);
+            return $this->get($serviceName);
+        }
+        throw new FlameException('Call to undefined method: '.$method);
     }
     
 } // END class DI
