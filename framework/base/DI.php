@@ -25,6 +25,16 @@ class DI
     private $_services = array();
 
     /**
+     * Singleton constructor
+     * @return void
+     * @author Donie Leigh <donie.leigh@gmail.com>
+     * @since 1.0
+     */
+    private function __construct()
+    {
+    }
+
+    /**
      * Return the singleton instance
      * @return object Singleton instance
      * @since 1.0
